@@ -1,0 +1,48 @@
+<div class="sidenav" [ngClass]="collapsed ? 'sidenav-collapsed' : ''">
+    <div class="logo-container">
+        <button class="logo" (click)="toggleCollapse()">A&H</button>
+        @if (collapsed) {
+        <div class="logo-text" @fadeInOut>Digital Perú</div>
+        }
+        @if (collapsed) {
+        <button class="btn-close" @rotate (click)="closeSidenav()">
+            <i class="fal fa-times close icon"></i>
+        </button>
+        }
+    </div>
+    <div class="scrollwrap scrollwrap_delayed">
+        <ul class="sidenav-nav">
+            @for (item of navData; track $index) {
+            <li class="sidenav-nav-item">
+                @if (item.items && item.items.length > 0) {
+                <a class="sidenav-nav-link" (click)="handleClick(item)" [ngClass]="getActiveClass(item)">
+                    <i class="sidenav-link-icon" [class]="item.icon"></i>
+                    @if (collapsed) {
+                    <span class="sidenav-link-text" @fadeInOut>{{item.label}}</span>
+                    }
+                    @if (item.items && collapsed) {
+                    <i class="menu-collapse-icon"
+                        [ngClass]="!item.expanded ? 'fal fa-angle-right' : 'fal fa-angle-down'"></i>
+                    }
+                </a>
+                }
+                @if (!item.items || (item.items && item.items.length === 0)) {
+                <a class="sidenav-nav-link" [routerLink]="[item.routeLink]" routerLinkActive="active"
+                    [routerLinkActiveOptions]="{exact: true}" (click)="shrinkItems(item)">
+                    <i class="sidenav-link-icon" [class]="item.icon"></i>
+                    @if (collapsed) {
+                    <span class="sidenav-link-text" @fadeInOut>{{item.label}}</span>
+                    }
+                </a>
+                }
+                @if (collapsed && item.items && item.items.length > 0) {
+                <div>
+                    <app-sublevel-menu [data]="item" [collapsed]="collapsed" [multiple]="multiple"
+                        [expanded]="item.expanded"></app-sublevel-menu>
+                </div>
+                }
+            </li>
+            }
+        </ul>
+    </div>
+</div>
